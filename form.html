@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Форма контролю якості</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .logout-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            padding: 20px;
+            color: #2c3e50;
+            touch-action: manipulation;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            position: relative;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .user-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: #3498db;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        
+        .checkbox-group {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        input[type="checkbox"], input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        
+        input[type="text"], input[type="number"] {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 15px;
+            margin-left: 10px;
+            width: 120px;
+        }
+        
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        label {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .custom-select-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 15px;
+        }
+
+        .product-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .custom-dropdown {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            max-height: 70vh;
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 12px;
+            z-index: 10000;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .dropdown-search {
+            padding: 15px;
+            border-bottom: 2px solid #eee;
+            background: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        .dropdown-search input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            background: white;
+        }
+
+        .dropdown-items {
+            max-height: 60vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+        }
+
+        .dropdown-item {
+            padding: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 16px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .dropdown-item.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 9999;
+            touch-action: none;
+        }
+
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            font-style: italic;
+        }
+        
+        button[type="submit"] {
+            padding: 12px 25px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 600;
+            display: block;
+            margin: 30px auto 0;
+        }
+        
+        button[type="submit"]:hover {
+            background-color: #27ae60;
+        }
+        
+        .sub-group {
+            margin-left: 30px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .unit-text {
+            margin-left: 8px;
+            color: #7f8c8d;
+        }
+        
+        @media (max-width: 768px) {
+            input[type="text"], input[type="number"] {
+                width: 100%;
+                margin-left: 0;
+                margin-top: 5px;
+            }
+            
+            .checkbox-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .unit-text {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+            
+            .dropdown-item {
+                padding: 18px;
+                font-size: 18px;
+                min-height: 55px;
+            }
+            
+            .dropdown-search input {
+                padding: 15px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Форма контролю якості продукції</h2>
+        
+        <div class="user-info">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <p>Лінія: <strong>{{ line }}</strong> | Оператор: <strong>{{ operator }}</strong> | Час авторизації: <strong>{{ login_time }}</strong></p>
+                <form action="/logout" method="post">
+                    <button type="submit" class="logout-btn">
+                        Змінити користувача
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <form method="post">
+            <div class="form-section">
+                <div class="section-title">Основна інформація</div>
+                <div class="form-group">
+                    <label>Продукція (марка):</label>
+                    <div class="custom-select-container">
+                        <input type="text" name="product" id="product-input" class="product-input" 
+                               placeholder="Натисніть для вибору продукції..." readonly
+                               autocomplete="off">
+                        
+                        <div class="custom-dropdown" id="product-dropdown">
+                            <div class="dropdown-search">
+                                <input type="text" id="product-search" placeholder="Введіть для пошуку..." 
+                                       autocomplete="off">
+                            </div>
+                            <div class="dropdown-items" id="product-items">
+                                {% for product in products %}
+                                <div class="dropdown-item" data-value="{{ product }}">
+                                    {{ product }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Решта форми без змін -->
+            <div class="form-section">
+                <div class="section-title">Дефекти</div>
+                
+                <!-- Діаметр оболонки кабелю -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="defect" value="Діаметр оболонки кабелю" id="diameter-checkbox"> 
+                            Діаметр оболонки кабелю
+                        </label>
+                    </div>
+                    <div class="sub-group" id="diameter-subgroup">
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="radio" name="diameter_issue" value="Вище допустимого"> 
+                                Вище допустимого
+                                <input type="number" name="diameter_high_value" placeholder="Значення">
+                                <span class="unit-text">мм</span>
+                            </label>
+                        </div>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="radio" name="diameter_issue" value="Менше допустимого"> 
+                                Менше допустимого
+                                <input type="number" name="diameter_low_value" placeholder="Значення">
+                                <span class="unit-text">мм</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Цілісність оболонки кабелю -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="defect" value="Цілісність оболонки кабелю" id="integrity-checkbox">
+                            Цілісність оболонки кабелю
+                        </label>
+                    </div>
+                    <div class="sub-group" id="integrity-subgroup">
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" name="integrity" value="Розрив оболонки">
+                                Розрив оболонки
+                                <input type="text" name="break_value" placeholder="Опис">
+                            </label>
+                        </div>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" name="integrity" value="Наплив маси">
+                                Наплив маси
+                                <input type="text" name="mass_value" placeholder="Опис">
+                            </label>
+                        </div>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" name="integrity" value="Нерівномірність діаметру">
+                                Нерівномірність діаметру
+                                <input type="text" name="uneven_value" placeholder="Опис">
+                            </label>
+                        </div>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" name="integrity" value="Потоншення">
+                                Потоншення
+                                <input type="text" name="thin_value" placeholder="Опис">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Інші елементи форми -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="defect" value="Асиметричність розташування елементів кабелю"> Асиметричність розташування елементів кабелю</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="defect" value="НДВ"> Надлишкова довжина волокна (НДВ)
+                            <input type="number" name="ndv_value" placeholder="Значення">
+                            <span class="unit-text">мм</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="defect" value="Нерівномірність розкладки кабелю"> Нерівномірність розкладки кабелю</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="defect" value="Нечіткість тексту маркування"> Нечіткість тексту маркування</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="defect" value="Невідповідність тексту маркування"> Невідповідність тексту маркування</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="defect" value="Відстань між позначками метражу"> Відстань між позначками метражу
+                            <input type="number" name="distance_value" placeholder="Значення">
+                            <span class="unit-text">м</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="defect" value="Номер ОВ"> Номер ОВ
+                            <input type="number" name="OVnumber_value" placeholder="Значення">
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Обрив прутка -->
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="defect" value="Обрив прутка" id="rod-checkbox">
+                            Обрив прутка
+                        </label>
+                    </div>
+                    <div class="sub-group" id="rod-subgroup">
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" name="rod" value="Віддачик №1">
+                                Віддачик №1
+                                <input type="text" name="rod1_comment" placeholder="Коментар">
+                            </label>
+                        </div>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" name="rod" value="Віддачик №2">
+                                Віддачик №2
+                                <input type="text" name="rod2_comment" placeholder="Коментар">
+                            </label>
+                        </div>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" name="rod" value="Натяг, кг">
+                                Натяг, кг
+                                <input type="number" name="tension_value" placeholder="Значення">
+                                <span class="unit-text">кг</span>
+                            </label>
+                        </div>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" name="rod" value="Швидкість, м/хв">
+                                Швидкість, м/хв
+                                <input type="number" name="speed_value" placeholder="Значення">
+                                <span class="unit-text">м/хв</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="defect" value="Обрив модуля"> Обрив модуля
+                            <input type="number" name="module_tension" placeholder="Натяг, кг">
+                            <span class="unit-text">кг</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit">Зберегти дані</button>
+        </form>
+    </div>
+
+    <script>
+        let allProducts = [];
+        let isDropdownOpen = false;
+        let isScrolling = false;
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        let scrollThreshold = 5; // Поріг для визначення прокрутки (px)
+        let timeThreshold = 200; // Поріг для визначення тапу (ms)
+
+        // Ініціалізація при завантаженні сторінки
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDropdown();
+            loadProducts();
+            setupSubgroups();
+        });
+
+        function initializeDropdown() {
+            const productInput = document.getElementById('product-input');
+            const productSearch = document.getElementById('product-search');
+            
+            // Обробка кліку на поле вводу
+            productInput.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!isDropdownOpen) {
+                    showProductDropdown();
+                } else {
+                    hideProductDropdown();
+                }
+            });
+            
+            // Обробка touch events для мобільних пристроїв
+            productInput.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                if (!isDropdownOpen) {
+                    showProductDropdown();
+                }
+            }, { passive: false });
+            
+            // Пошук при введенні тексту
+            productSearch.addEventListener('input', function() {
+                filterProducts();
+            });
+            
+            // Закриття по кліку на overlay
+            document.addEventListener('click', function(e) {
+                if (isDropdownOpen && !e.target.closest('.custom-dropdown') && e.target !== productInput) {
+                    hideProductDropdown();
+                }
+            });
+            
+            // Закриття по Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isDropdownOpen) {
+                    hideProductDropdown();
+                }
+            });
+        }
+
+        function showProductDropdown() {
+            const dropdown = document.getElementById('product-dropdown');
+            const overlay = document.createElement('div');
+            overlay.className = 'dropdown-overlay';
+            overlay.id = 'dropdown-overlay';
+            
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    hideProductDropdown();
+                }
+            });
+
+            // Запобігаємо прокрутці фону
+            overlay.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            
+            document.body.appendChild(overlay);
+            dropdown.style.display = 'block';
+            overlay.style.display = 'block';
+            isDropdownOpen = true;
+            
+            // Фокусуємося на полі пошуку
+            setTimeout(() => {
+                const searchInput = document.getElementById('product-search');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+                
+                // Прокручуємо до верху
+                const itemsContainer = document.getElementById('product-items');
+                if (itemsContainer) {
+                    itemsContainer.scrollTop = 0;
+                }
+            }, 100);
+            
+            // Додаємо обробники для елементів списку
+            attachItemHandlers();
+        }
+
+        function hideProductDropdown() {
+            const dropdown = document.getElementById('product-dropdown');
+            const overlay = document.getElementById('dropdown-overlay');
+            
+            if (dropdown) {
+                dropdown.style.display = 'none';
+            }
+            if (overlay) {
+                overlay.remove();
+            }
+            
+            isDropdownOpen = false;
+            isScrolling = false;
+            
+            // Очищаємо поле пошуку
+            const searchInput = document.getElementById('product-search');
+            if (searchInput) {
+                searchInput.value = '';
+            }
+            
+            // Відновлюємо всі продукти
+            filterProducts();
+        }
+
+        function filterProducts() {
+            const searchText = document.getElementById('product-search').value.toLowerCase();
+            const itemsContainer = document.getElementById('product-items');
+            
+            if (!itemsContainer) return;
+            
+            if (searchText === '') {
+                renderProducts(allProducts);
+                return;
+            }
+            
+            const filteredProducts = allProducts.filter(product => 
+                product.toLowerCase().includes(searchText)
+            );
+            
+            renderProducts(filteredProducts);
+        }
+
+        function renderProducts(products) {
+            const itemsContainer = document.getElementById('product-items');
+            
+            if (!itemsContainer) return;
+            
+            if (products.length === 0) {
+                itemsContainer.innerHTML = '<div class="no-results">Нічого не знайдено</div>';
+                return;
+            }
+            
+            itemsContainer.innerHTML = '';
+            
+            products.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.textContent = product;
+                item.setAttribute('data-value', product);
+                itemsContainer.appendChild(item);
+            });
+            
+            // Додаємо обробники для нових елементів
+            attachItemHandlers();
+        }
+
+        function attachItemHandlers() {
+            const items = document.querySelectorAll('.dropdown-item');
+            
+            items.forEach(item => {
+                // Видаляємо старі обробники
+                const newItem = item.cloneNode(true);
+                item.parentNode.replaceChild(newItem, item);
+            });
+            
+            // Додаємо нові обробники
+            const newItems = document.querySelectorAll('.dropdown-item');
+            
+            newItems.forEach(item => {
+                // Клік мишею
+                item.addEventListener('click', function(e) {
+                    if (!isScrolling) {
+                        selectProduct(this.getAttribute('data-value'));
+                    }
+                });
+                
+                // Touch events для мобільних
+                item.addEventListener('touchstart', function(e) {
+                    touchStartY = e.touches[0].clientY;
+                    touchStartTime = Date.now();
+                    isScrolling = false;
+                    
+                    // Додаємо активний клас
+                    this.classList.add('active');
+                }, { passive: true });
+                
+                item.addEventListener('touchmove', function(e) {
+                    const currentY = e.touches[0].clientY;
+                    const deltaY = Math.abs(currentY - touchStartY);
+                    
+                    // Якщо рух більше порога - це прокрутка
+                    if (deltaY > scrollThreshold) {
+                        isScrolling = true;
+                        this.classList.remove('active');
+                    }
+                }, { passive: true });
+                
+                item.addEventListener('touchend', function(e) {
+                    const touchEndTime = Date.now();
+                    const touchDuration = touchEndTime - touchStartTime;
+                    const currentY = e.changedTouches[0].clientY;
+                    const deltaY = Math.abs(currentY - touchStartY);
+                    
+                    // Видаляємо активний клас
+                    this.classList.remove('active');
+                    
+                    // Якщо це не прокрутка і короткий тап - вибираємо значення
+                    if (!isScrolling && deltaY <= scrollThreshold && touchDuration < timeThreshold) {
+                        e.preventDefault();
+                        selectProduct(this.getAttribute('data-value'));
+                    }
+                }, { passive: false });
+                
+                item.addEventListener('touchcancel', function() {
+                    this.classList.remove('active');
+                    isScrolling = false;
+                });
+            });
+        }
+
+        function selectProduct(product) {
+            document.getElementById('product-input').value = product;
+            
+            // Оновлюємо приховане поле
+            let hiddenInput = document.getElementById('selected-product');
+            if (!hiddenInput) {
+                hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'product';
+                hiddenInput.id = 'selected-product';
+                document.querySelector('form').appendChild(hiddenInput);
+            }
+            hiddenInput.value = product;
+            
+            hideProductDropdown();
+        }
+
+        function loadProducts() {
+            // Спроба отримати продукти з API
+            fetch('/api/products')
+                .then(response => {
+                    if (!response.ok) throw new Error('Network error');
+                    return response.json();
+                })
+                .then(products => {
+                    allProducts = products;
+                    renderProducts(products);
+                })
+                .catch(error => {
+                    console.log('Використання локальних продуктів');
+                    // Використовуємо продукти з шаблону
+                    allProducts = [
+                        {% for product in products %}
+                        '{{ product }}'{% if not loop.last %},{% endif %}
+                        {% endfor %}
+                    ];
+                    renderProducts(allProducts);
+                });
+        }
+
+        function setupSubgroups() {
+            // Діаметр оболонки кабелю
+            setupSubgroup('diameter-checkbox', 'diameter-subgroup', function() {
+                document.querySelectorAll('input[name="diameter_issue"]').forEach(radio => {
+                    radio.checked = false;
+                });
+                document.querySelectorAll('input[name="diameter_high_value"], input[name="diameter_low_value"]').forEach(input => {
+                    input.value = '';
+                });
+            });
+
+            // Цілісність оболонки кабелю
+            setupSubgroup('integrity-checkbox', 'integrity-subgroup', function() {
+                document.querySelectorAll('input[name="integrity"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                document.querySelectorAll('input[name="break_value"], input[name="mass_value"], input[name="uneven_value"], input[name="thin_value"]').forEach(input => {
+                    input.value = '';
+                });
+            });
+
+            // Обрив прутка
+            setupSubgroup('rod-checkbox', 'rod-subgroup', function() {
+                document.querySelectorAll('input[name="rod"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                document.querySelectorAll('input[name="rod1_comment"], input[name="rod2_comment"], input[name="tension_value"], input[name="speed_value"]').forEach(input => {
+                    input.value = '';
+                });
+            });
+        }
+
+        // Функція для керування підгрупами
+        function setupSubgroup(checkboxId, subgroupId, clearInputs) {
+            const checkbox = document.getElementById(checkboxId);
+            const subgroup = document.getElementById(subgroupId);
+            
+            if (!checkbox || !subgroup) return;
+            
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    subgroup.style.display = 'block';
+                } else {
+                    subgroup.style.display = 'none';
+                    if (clearInputs) {
+                        clearInputs();
+                    }
+                }
+            });
+        }
+
+        // Функція для показу сповіщення
+        function showNotification(message, isSuccess = true) {
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.padding = '15px 20px';
+            notification.style.background = isSuccess ? '#2ecc71' : '#e74c3c';
+            notification.style.color = 'white';
+            notification.style.borderRadius = '5px';
+            notification.style.zIndex = '1000';
+            notification.style.boxShadow = '0 3px 10px rgba(0,0,0,0.2)';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Перевіряємо чи є повідомлення про успішне збереження
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('saved') === 'true') {
+            showNotification('Дані успішно збережено!', true);
+        }
+    </script>
+</body>
+</html>

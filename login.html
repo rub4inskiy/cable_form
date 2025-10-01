@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизація</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        select, input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .export-btn {
+            background-color: #28a745;
+        }
+        .export-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Система контролю якості</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="line">Лінія:</label>
+                <select id="line" name="line" required>
+                    <option value="">Оберіть лінію</option>
+                    {% for line in lines %}
+                        <option value="{{ line }}">{{ line }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="operator">Оператор:</label>
+                <select id="operator" name="operator" required>
+                    <option value="">Оберіть оператора</option>
+                    {% for operator in operators %}
+                        <option value="{{ operator }}">{{ operator }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <input type="submit" value="Увійти">
+            <!-- Додати окрему кнопку з посиланням -->
+<a href="/export" class="export-link">Експортувати дані</a>
+
+<style>
+.export-link {
+    display: block;
+    text-align: center;
+    background-color: #28a745;
+    color: white;
+    padding: 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+.export-link:hover {
+    background-color: #218838;
+}
+</style>
+        </form>
+    </div>
+</body>
+</html>
